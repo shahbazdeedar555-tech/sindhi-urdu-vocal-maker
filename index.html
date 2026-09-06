@@ -33,9 +33,11 @@
       margin-bottom: 8px;
     }
 
-    header p {
-      font-size: 16px;
-      opacity: 0.9;
+    .sindhi {
+      direction: rtl;
+      text-align: center;
+      font-size: 20px;
+      margin-top: 10px;
     }
 
     .container {
@@ -56,33 +58,8 @@
       margin-bottom: 12px;
     }
 
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    button,
-    .btn {
-      border: none;
-      padding: 12px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 15px;
-      background: #222;
-      color: white;
-      display: inline-block;
-    }
-
-    button:hover,
-    .btn:hover {
-      opacity: 0.85;
-    }
-
     .upload-box {
-      border: 2px dashed #aaa;
+      border: 2px dashed #999;
       padding: 25px;
       text-align: center;
       border-radius: 10px;
@@ -94,7 +71,50 @@
       width: 100%;
     }
 
-    #fileInfo {
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      background: #222;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    #saveBtn {
+      background: #087f23;
+      display: none;
+    }
+
+    .vocal-item {
+      background: #f1f3f5;
+      padding: 15px;
+      margin-top: 12px;
+      border-radius: 8px;
+    }
+
+    .vocal-item audio {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .delete-btn {
+      background: #b00020;
+      margin-top: 10px;
+    }
+
+    #message {
       margin-top: 15px;
       font-weight: bold;
     }
@@ -106,127 +126,257 @@
       background: #222;
       color: white;
     }
-
-    .sindhi {
-      direction: rtl;
-      text-align: right;
-      font-size: 20px;
-      margin-top: 10px;
-    }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>🎵 Sindhi Urdu Vocal Repository</h1>
-    <p>Store, manage and share Sindhi & Urdu vocal recordings</p>
+<header>
+  <h1>🎵 Sindhi Urdu Vocal Repository</h1>
+  <p>Store and manage Sindhi & Urdu vocal recordings</p>
 
-    <div class="sindhi">
-      سنڌي ۽ اردو آواز جو ذخيرو
-    </div>
-  </header>
+  <div class="sindhi">
+    سنڌي ۽ اردو آواز جو ذخيرو
+  </div>
+</header>
 
-  <main class="container">
 
-    <section class="card">
-      <h2>🎤 Vocal Repository</h2>
+<main class="container">
 
-      <p>
-        Welcome to the Sindhi Urdu Vocal Repository.
-        This project is designed to collect and organize
-        Sindhi and Urdu vocal recordings.
-      </p>
+  <!-- UPLOAD -->
+  <section class="card">
+
+    <h2>🎙️ Upload Vocal</h2>
+
+    <p>Select your vocal audio file.</p>
+
+    <div class="upload-box">
+
+      <input
+        type="file"
+        id="audioFile"
+        accept="audio/*"
+      >
+
+      <div id="fileInfo">
+        No file selected
+      </div>
 
       <div class="buttons">
-        <a class="btn" href="#upload">Upload Vocal</a>
-        <a class="btn" href="#repository">View Repository</a>
-      </div>
-    </section>
 
-
-    <section class="card" id="upload">
-      <h2>🎙️ Upload Vocal</h2>
-
-      <p>
-        Select an audio file from your device.
-      </p>
-
-      <div class="upload-box">
-
-        <label for="audioFile">
-          Choose Vocal Audio File
-        </label>
-
-        <input
-          type="file"
-          id="audioFile"
-          accept="audio/*"
-        >
-
-        <div id="fileInfo">
-          No file selected
-        </div>
+        <button id="saveBtn">
+          💾 Save Vocal
+        </button>
 
       </div>
-    </section>
+
+      <div id="message"></div>
+
+    </div>
+
+  </section>
 
 
-    <section class="card" id="repository">
-      <h2>📚 Repository</h2>
+  <!-- REPOSITORY -->
+  <section class="card">
 
-      <p>
-        Your saved vocal recordings will appear here.
-      </p>
+    <h2>📚 Saved Vocals</h2>
 
-      <div id="vocalList">
-        <p>No vocals saved yet.</p>
-      </div>
-    </section>
+    <div id="vocalList">
+      <p>No vocals saved yet.</p>
+    </div>
 
-
-    <section class="card">
-      <h2>🎼 Project Information</h2>
-
-      <p>
-        This repository is being developed for
-        Sindhi and Urdu singers, poets, musicians and
-        creators.
-      </p>
-
-      <div class="sindhi">
-        هي پليٽ فارم سنڌي ۽ اردو گلوڪارن، شاعرن،
-        موسيقارن ۽ تخليقڪارن لاءِ تيار ڪيو پيو وڃي.
-      </div>
-    </section>
-
-  </main>
+  </section>
 
 
-  <footer>
-    <p>© 2026 Sindhi Urdu Vocal Repository</p>
-    <p>Created by Deedar Shahbaz</p>
-  </footer>
+  <!-- INFORMATION -->
+  <section class="card">
+
+    <h2>🎼 About This Repository</h2>
+
+    <p>
+      This project is designed to collect and organize
+      Sindhi and Urdu vocal recordings for singers,
+      poets, musicians and creators.
+    </p>
+
+    <div class="sindhi">
+      سنڌي ۽ اردو گيتن ۽ آوازن کي محفوظ ۽ منظم ڪرڻ لاءِ
+      هي repository تيار ڪئي پئي وڃي.
+    </div>
+
+  </section>
+
+</main>
 
 
-  <script>
-    const audioFile = document.getElementById("audioFile");
-    const fileInfo = document.getElementById("fileInfo");
+<footer>
+  <p>© 2026 Sindhi Urdu Vocal Repository</p>
+  <p>Created by Deedar Shahbaz</p>
+</footer>
 
-    audioFile.addEventListener("change", function () {
 
-      if (this.files.length > 0) {
-        const file = this.files[0];
+<script>
 
-        fileInfo.textContent =
-          "Selected: " + file.name;
-      } else {
-        fileInfo.textContent =
-          "No file selected";
-      }
+  const audioFile = document.getElementById("audioFile");
+  const fileInfo = document.getElementById("fileInfo");
+  const saveBtn = document.getElementById("saveBtn");
+  const message = document.getElementById("message");
+  const vocalList = document.getElementById("vocalList");
+
+  let selectedFile = null;
+
+
+  // Select audio
+  audioFile.addEventListener("change", function () {
+
+    if (this.files.length === 0) {
+      selectedFile = null;
+      saveBtn.style.display = "none";
+      fileInfo.textContent = "No file selected";
+      return;
+    }
+
+    selectedFile = this.files[0];
+
+    fileInfo.textContent =
+      "Selected: " + selectedFile.name;
+
+    saveBtn.style.display = "inline-block";
+
+    message.textContent = "";
+
+  });
+
+
+  // Save vocal
+  saveBtn.addEventListener("click", function () {
+
+    if (!selectedFile) {
+      message.textContent =
+        "⚠️ Please select an audio file first.";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+
+      const vocals =
+        JSON.parse(localStorage.getItem("savedVocals")) || [];
+
+      const vocal = {
+        name: selectedFile.name,
+        type: selectedFile.type,
+        data: reader.result,
+        date: new Date().toLocaleString()
+      };
+
+      vocals.push(vocal);
+
+      localStorage.setItem(
+        "savedVocals",
+        JSON.stringify(vocals)
+      );
+
+      message.textContent =
+        "✅ Vocal saved successfully!";
+
+      selectedFile = null;
+      audioFile.value = "";
+      fileInfo.textContent = "No file selected";
+      saveBtn.style.display = "none";
+
+      displayVocals();
+
+    };
+
+    reader.readAsDataURL(selectedFile);
+
+  });
+
+
+  // Display saved vocals
+  function displayVocals() {
+
+    const vocals =
+      JSON.parse(localStorage.getItem("savedVocals")) || [];
+
+    if (vocals.length === 0) {
+
+      vocalList.innerHTML =
+        "<p>No vocals saved yet.</p>";
+
+      return;
+    }
+
+    vocalList.innerHTML = "";
+
+    vocals.forEach(function (vocal, index) {
+
+      const item =
+        document.createElement("div");
+
+      item.className = "vocal-item";
+
+      item.innerHTML = `
+        <strong>🎵 ${escapeHTML(vocal.name)}</strong>
+
+        <p>Saved: ${escapeHTML(vocal.date)}</p>
+
+        <audio controls src="${vocal.data}"></audio>
+
+        <br>
+
+        <button
+          class="delete-btn"
+          onclick="deleteVocal(${index})">
+          🗑️ Delete
+        </button>
+      `;
+
+      vocalList.appendChild(item);
 
     });
-  </script>
+
+  }
+
+
+  // Delete vocal
+  function deleteVocal(index) {
+
+    const vocals =
+      JSON.parse(localStorage.getItem("savedVocals")) || [];
+
+    vocals.splice(index, 1);
+
+    localStorage.setItem(
+      "savedVocals",
+      JSON.stringify(vocals)
+    );
+
+    displayVocals();
+
+  }
+
+
+  // Basic HTML escaping
+  function escapeHTML(text) {
+
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  // Load saved vocals
+  displayVocals();
+
+</script>
 
 </body>
 </html>
