@@ -221,8 +221,6 @@ text-align:center;
 
 <div class="upload-box">
 
-<!-- NATIVE ANDROID FILE PICKER -->
-
 <input
 class="file-input"
 type="file"
@@ -266,6 +264,11 @@ No vocals saved yet.
 💾 <strong>Local Repository:</strong>
 Saved recordings remain in this browser on this device.
 
+<br><br>
+
+📦 <strong>Storage:</strong>
+Audio files are stored using IndexedDB instead of localStorage.
+
 </div>
 
 </section>
@@ -302,6 +305,22 @@ poets, musicians and creators.
 
 <script>
 
+/* =====================================================
+   INDEXEDDB VOCAL REPOSITORY
+===================================================== */
+
+const DB_NAME = "SindhiUrduVocalRepositoryDB";
+const DB_VERSION = 1;
+const STORE_NAME = "vocals";
+
+let db = null;
+let selectedFile = null;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
 const audioFile =
 document.getElementById("audioFile");
 
@@ -318,18 +337,66 @@ const vocalList =
 document.getElementById("vocalList");
 
 
-const STORAGE_KEY =
-"sindhiUrduVocalRepository";
+/* =====================================================
+   OPEN DATABASE
+===================================================== */
+
+function openDatabase(){
+
+return new Promise(function(resolve,reject){
+
+const request =
+indexedDB.open(DB_NAME,DB_VERSION);
 
 
-let selectedFile = null;
+request.onupgradeneeded =
+function(event){
+
+const database =
+event.target.result;
+
+if(!database.objectStoreNames.contains(STORE_NAME)){
+
+database.createObjectStore(
+STORE_NAME,
+{
+keyPath:"id"
+}
+);
+
+}
+
+};
 
 
-/* =========================
+request.onsuccess =
+function(event){
+
+db =
+event.target.result;
+
+resolve(db);
+
+};
+
+
+request.onerror =
+function(){
+
+reject(request.error);
+
+};
+
+});
+
+}
+
+
+/* =====================================================
    SELECT FILE
-========================= */
+===================================================== */
 
-audioFile.addEventListener("change", function(){
+audioFile.addEventListener("change",function(){
 
 message.textContent = "";
 
@@ -347,15 +414,8 @@ return;
 
 }
 
-
 selectedFile =
 this.files[0];
-
-
-console.log(
-"Selected file:",
-selectedFile.name
-);
 
 
 fileInfo.innerHTML =
@@ -379,11 +439,11 @@ message.textContent =
 });
 
 
-/* =========================
-   SAVE
-========================= */
+/* =====================================================
+   SAVE VOCAL
+===================================================== */
 
-saveBtn.addEventListener("click", function(){
+saveBtn.addEventListener("click",async function(){
 
 if(!selectedFile){
 
@@ -401,22 +461,15 @@ saveBtn.textContent =
 "⏳ Saving...";
 
 
-const reader =
-new FileReader();
-
-
-reader.onload = function(event){
-
 try{
 
-const vocals =
-getVocals();
+await openDatabase();
 
 
-const newVocal = {
+const vocal = {
 
 id:
-Date.now().toString(),
+Date.now().toString() + "_" + Math.random().toString(36).substring(2),
 
 name:
 selectedFile.name,
@@ -431,18 +484,12 @@ date:
 new Date().toLocaleString(),
 
 data:
-event.target.result
+selectedFile
 
 };
 
 
-vocals.push(newVocal);
-
-
-localStorage.setItem(
-STORAGE_KEY,
-JSON.stringify(vocals)
-);
+await saveVocalToDB(vocal);
 
 
 message.textContent =
@@ -460,16 +507,20 @@ saveBtn.style.display =
 "none";
 
 
-displayVocals();
+await displayVocals();
 
 }
 
 catch(error){
 
-console.error(error);
+console.error(
+"Save error:",
+error
+);
+
 
 message.textContent =
-"❌ Storage is full. Try a smaller audio file.";
+"❌ Could not save the vocal. Please check browser storage permission.";
 
 }
 
@@ -478,73 +529,117 @@ saveBtn.disabled = false;
 
 saveBtn.textContent =
 "💾 Save Vocal";
-
-};
-
-
-reader.onerror = function(){
-
-message.textContent =
-"❌ Could not read this audio file.";
-
-saveBtn.disabled = false;
-
-saveBtn.textContent =
-"💾 Save Vocal";
-
-};
-
-
-reader.readAsDataURL(selectedFile);
 
 });
 
 
-/* =========================
-   GET VOCALS
-========================= */
+/* =====================================================
+   SAVE TO INDEXEDDB
+===================================================== */
+
+function saveVocalToDB(vocal){
+
+return new Promise(function(resolve,reject){
+
+const transaction =
+db.transaction(
+[STORE_NAME],
+"readwrite"
+);
+
+const store =
+transaction.objectStore(STORE_NAME);
+
+
+const request =
+store.put(vocal);
+
+
+request.onsuccess =
+function(){
+
+resolve();
+
+};
+
+
+request.onerror =
+function(){
+
+reject(request.error);
+
+};
+
+});
+
+}
+
+
+/* =====================================================
+   GET ALL VOCALS
+===================================================== */
 
 function getVocals(){
 
+return new Promise(function(resolve,reject){
+
+if(!db){
+
+resolve([]);
+
+return;
+
+}
+
+
+const transaction =
+db.transaction(
+[STORE_NAME],
+"readonly"
+);
+
+const store =
+transaction.objectStore(STORE_NAME);
+
+
+const request =
+store.getAll();
+
+
+request.onsuccess =
+function(){
+
+resolve(
+request.result || []
+);
+
+};
+
+
+request.onerror =
+function(){
+
+reject(request.error);
+
+};
+
+});
+
+}
+
+
+/* =====================================================
+   DISPLAY VOCALS
+===================================================== */
+
+async function displayVocals(){
+
 try{
 
-const data =
-localStorage.getItem(STORAGE_KEY);
-
-if(!data){
-
-return [];
-
-}
+await openDatabase();
 
 const vocals =
-JSON.parse(data);
-
-return Array.isArray(vocals)
-? vocals
-: [];
-
-}
-
-catch(error){
-
-console.error(error);
-
-return [];
-
-}
-
-}
-
-
-/* =========================
-   DISPLAY
-========================= */
-
-function displayVocals(){
-
-const vocals =
-getVocals();
+await getVocals();
 
 
 if(vocals.length === 0){
@@ -562,6 +657,13 @@ return;
 
 
 vocalList.innerHTML = "";
+
+
+vocals.sort(function(a,b){
+
+return b.id.localeCompare(a.id);
+
+});
 
 
 vocals.forEach(function(vocal){
@@ -595,8 +697,30 @@ document.createElement("audio");
 
 player.controls = true;
 
+
+/*
+   Create temporary URL from the
+   stored Blob/File.
+*/
+
+const audioURL =
+URL.createObjectURL(vocal.data);
+
 player.src =
-vocal.data;
+audioURL;
+
+
+player.addEventListener(
+"ended",
+function(){
+
+URL.revokeObjectURL(audioURL);
+
+},
+{
+once:true
+}
+);
 
 
 const actions =
@@ -616,7 +740,7 @@ download.textContent =
 "⬇️ Download Vocal";
 
 download.href =
-vocal.data;
+audioURL;
 
 download.download =
 vocal.name;
@@ -665,42 +789,105 @@ vocalList.appendChild(item);
 
 }
 
+catch(error){
 
-/* =========================
-   DELETE
-========================= */
-
-function deleteVocal(id){
-
-const vocals =
-getVocals();
-
-
-const updated =
-vocals.filter(function(vocal){
-
-return vocal.id !== id;
-
-});
-
-
-localStorage.setItem(
-STORAGE_KEY,
-JSON.stringify(updated)
+console.error(
+"Display error:",
+error
 );
 
+vocalList.innerHTML =
+`
+<div class="empty">
+⚠️ Could not load saved vocals.
+</div>
+`;
 
-message.textContent =
-"🗑️ Vocal deleted.";
-
-displayVocals();
+}
 
 }
 
 
-/* =========================
+/* =====================================================
+   DELETE VOCAL
+===================================================== */
+
+async function deleteVocal(id){
+
+if(!confirm(
+"Are you sure you want to delete this vocal?"
+)){
+
+return;
+
+}
+
+
+try{
+
+await openDatabase();
+
+
+await new Promise(function(resolve,reject){
+
+const transaction =
+db.transaction(
+[STORE_NAME],
+"readwrite"
+);
+
+const store =
+transaction.objectStore(STORE_NAME);
+
+
+const request =
+store.delete(id);
+
+
+request.onsuccess =
+function(){
+
+resolve();
+
+};
+
+
+request.onerror =
+function(){
+
+reject(request.error);
+
+};
+
+});
+
+
+message.textContent =
+"🗑️ Vocal deleted successfully.";
+
+
+await displayVocals();
+
+}
+
+catch(error){
+
+console.error(
+"Delete error:",
+error
+);
+
+message.textContent =
+"❌ Could not delete the vocal.";
+
+}
+
+}
+
+
+/* =====================================================
    FILE SIZE
-========================= */
+===================================================== */
 
 function formatFileSize(bytes){
 
@@ -740,9 +927,9 @@ units[index]
 }
 
 
-/* =========================
+/* =====================================================
    SECURITY
-========================= */
+===================================================== */
 
 function escapeHTML(text){
 
@@ -761,11 +948,33 @@ return String(text)
 }
 
 
-/* =========================
+/* =====================================================
    START
-========================= */
+===================================================== */
 
-displayVocals();
+(async function(){
+
+try{
+
+await openDatabase();
+
+await displayVocals();
+
+}
+
+catch(error){
+
+console.error(
+"Database initialization error:",
+error
+);
+
+message.textContent =
+"❌ Browser storage could not be initialized.";
+
+}
+
+})();
 
 </script>
 
