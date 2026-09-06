@@ -2,886 +2,928 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Sindhi Urdu Vocal Repository</title>
+<title>Sindhi Urdu Vocal Repository</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
-      color: #222;
-      line-height: 1.6;
-    }
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
 
-    header {
-      background: #222;
-      color: white;
-      padding: 25px 15px;
-      text-align: center;
-    }
+body{
+font-family:Arial,sans-serif;
+background:#f5f7fa;
+color:#222;
+line-height:1.6;
+}
 
-    header h1 {
-      font-size: 28px;
-      margin-bottom: 8px;
-    }
+header{
+background:#222;
+color:white;
+padding:25px 15px;
+text-align:center;
+}
 
-    .sindhi {
-      direction: rtl;
-      text-align: center;
-      font-size: 20px;
-      margin-top: 10px;
-    }
+header h1{
+font-size:27px;
+margin-bottom:8px;
+}
 
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 0 15px;
-    }
+.sindhi{
+direction:rtl;
+text-align:center;
+font-size:20px;
+margin-top:10px;
+}
 
-    .card {
-      background: white;
-      padding: 25px;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-    }
+.container{
+max-width:900px;
+margin:30px auto;
+padding:0 15px;
+}
 
-    .card h2 {
-      margin-bottom: 12px;
-    }
+.card{
+background:white;
+padding:25px;
+margin-bottom:20px;
+border-radius:12px;
+box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
 
-    .upload-box {
-      border: 2px dashed #999;
-      padding: 25px;
-      text-align: center;
-      border-radius: 10px;
-      margin-top: 15px;
-    }
+.card h2{
+margin-bottom:12px;
+}
 
-    input[type="file"] {
-      margin-top: 15px;
-      width: 100%;
-    }
+.upload-box{
+border:2px dashed #888;
+padding:25px 18px;
+text-align:center;
+border-radius:12px;
+margin-top:15px;
+background:#fafafa;
+}
 
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
+/* REAL MOBILE UPLOAD BUTTON */
 
-    button,
-    .download-btn {
-      border: none;
-      padding: 12px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 15px;
-      color: white;
-      text-decoration: none;
-      display: inline-block;
-    }
+.file-label{
+display:inline-block;
+background:#0757a8;
+color:white;
+padding:14px 22px;
+border-radius:9px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+margin-top:10px;
+}
 
-    button:hover,
-    .download-btn:hover {
-      opacity: 0.85;
-    }
+.file-label:hover{
+opacity:.85;
+}
 
-    #saveBtn {
-      background: #087f23;
-      display: none;
-    }
+#audioFile{
+display:none;
+}
 
-    .vocal-item {
-      background: #f1f3f5;
-      padding: 15px;
-      margin-top: 12px;
-      border-radius: 8px;
-    }
+#fileInfo{
+margin-top:18px;
+font-size:15px;
+word-break:break-word;
+}
 
-    .vocal-item strong {
-      display: block;
-      word-break: break-word;
-    }
+.buttons{
+display:flex;
+justify-content:center;
+margin-top:20px;
+}
 
-    .vocal-item p {
-      margin-top: 5px;
-      color: #555;
-      font-size: 14px;
-    }
+button,
+.download-btn{
+border:none;
+padding:12px 18px;
+border-radius:8px;
+cursor:pointer;
+font-size:15px;
+color:white;
+text-decoration:none;
+display:inline-block;
+}
 
-    .vocal-item audio {
-      width: 100%;
-      margin-top: 12px;
-    }
+button:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
 
-    .action-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
+#saveBtn{
+background:#087f23;
+display:none;
+}
 
-    .download-btn {
-      background: #0757a8;
-    }
+.vocal-item{
+background:#f1f3f5;
+padding:15px;
+margin-top:12px;
+border-radius:8px;
+}
 
-    .delete-btn {
-      background: #b00020;
-    }
+.vocal-item strong{
+display:block;
+word-break:break-word;
+}
 
-    #message {
-      margin-top: 15px;
-      font-weight: bold;
-    }
+.vocal-item p{
+margin-top:5px;
+color:#555;
+font-size:14px;
+}
 
-    .storage-info {
-      margin-top: 15px;
-      padding: 12px;
-      background: #eef5ff;
-      border-radius: 8px;
-      font-size: 14px;
-    }
+.vocal-item audio{
+width:100%;
+margin-top:12px;
+}
 
-    .empty {
-      text-align: center;
-      padding: 20px;
-      color: #777;
-    }
+.action-buttons{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:12px;
+}
 
-    footer {
-      text-align: center;
-      padding: 25px;
-      margin-top: 40px;
-      background: #222;
-      color: white;
-    }
+.download-btn{
+background:#0757a8;
+}
 
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 22px;
-      }
+.delete-btn{
+background:#b00020;
+}
 
-      .card {
-        padding: 18px;
-      }
+#message{
+margin-top:15px;
+font-weight:bold;
+}
 
-      button,
-      .download-btn {
-        width: 100%;
-      }
-    }
-  </style>
+.storage-info{
+margin-top:15px;
+padding:12px;
+background:#eef5ff;
+border-radius:8px;
+font-size:14px;
+}
+
+.empty{
+text-align:center;
+padding:20px;
+color:#777;
+}
+
+footer{
+text-align:center;
+padding:25px;
+margin-top:40px;
+background:#222;
+color:white;
+}
+
+@media(max-width:600px){
+
+header h1{
+font-size:22px;
+}
+
+.card{
+padding:18px;
+}
+
+.file-label{
+width:100%;
+}
+
+button,
+.download-btn{
+width:100%;
+text-align:center;
+}
+
+}
+
+</style>
 </head>
+
 
 <body>
 
 <header>
-  <h1>🎵 Sindhi Urdu Vocal Repository</h1>
-  <p>Store and manage Sindhi & Urdu vocal recordings</p>
 
-  <div class="sindhi">
-    سنڌي ۽ اردو آواز جو ذخيرو
-  </div>
+<h1>🎵 Sindhi Urdu Vocal Repository</h1>
+
+<p>
+Store and manage Sindhi & Urdu vocal recordings
+</p>
+
+<div class="sindhi">
+سنڌي ۽ اردو آواز جو ذخيرو
+</div>
+
 </header>
 
 
 <main class="container">
 
-  <!-- UPLOAD -->
-  <section class="card">
 
-    <h2>🎙️ Upload Vocal</h2>
+<!-- UPLOAD VOCAL -->
 
-    <p>Select your vocal audio file.</p>
+<section class="card">
 
-    <div class="upload-box">
+<h2>🎙️ Upload Vocal</h2>
 
-      <input
-        type="file"
-        id="audioFile"
-        accept="audio/*"
-      >
-
-      <div id="fileInfo">
-        No file selected
-      </div>
-
-      <div class="buttons">
-
-        <button id="saveBtn">
-          💾 Save Vocal
-        </button>
-
-      </div>
-
-      <div id="message"></div>
-
-    </div>
-
-  </section>
+<p>
+Select your vocal audio file.
+</p>
 
 
-  <!-- REPOSITORY -->
-  <section class="card">
-
-    <h2>📚 Saved Vocals</h2>
-
-    <div id="vocalList">
-      <div class="empty">
-        No vocals saved yet.
-      </div>
-    </div>
-
-    <div class="storage-info">
-      💾 <strong>Local Repository:</strong>
-      Your saved vocals are stored in this browser on this device.
-    </div>
-
-  </section>
+<div class="upload-box">
 
 
-  <!-- INFORMATION -->
-  <section class="card">
+<!-- MOBILE UPLOAD BUTTON -->
 
-    <h2>🎼 About This Repository</h2>
+<label
+for="audioFile"
+class="file-label">
 
-    <p>
-      This project is designed to collect and organize
-      Sindhi and Urdu vocal recordings for singers,
-      poets, musicians and creators.
-    </p>
+📁 Choose Vocal File
 
-    <div class="sindhi">
-      سنڌي ۽ اردو گيتن ۽ آوازن کي محفوظ ۽ منظم ڪرڻ لاءِ
-      هي repository تيار ڪئي پئي وڃي.
-    </div>
+</label>
 
-  </section>
+
+<input
+type="file"
+id="audioFile"
+accept="audio/*"
+>
+
+
+<div id="fileInfo">
+No file selected
+</div>
+
+
+<div class="buttons">
+
+<button id="saveBtn">
+💾 Save Vocal
+</button>
+
+</div>
+
+
+<div id="message"></div>
+
+</div>
+
+</section>
+
+
+
+<!-- SAVED VOCALS -->
+
+<section class="card">
+
+<h2>
+📚 Saved Vocals
+</h2>
+
+
+<div id="vocalList">
+
+<div class="empty">
+No vocals saved yet.
+</div>
+
+</div>
+
+
+<div class="storage-info">
+
+💾 <strong>Local Repository:</strong>
+
+Your saved vocals are stored in this browser
+on this device.
+
+</div>
+
+</section>
+
+
+
+<!-- ABOUT -->
+
+<section class="card">
+
+<h2>
+🎼 About This Repository
+</h2>
+
+
+<p>
+
+This project is designed to collect and organize
+Sindhi and Urdu vocal recordings for singers,
+poets, musicians and creators.
+
+</p>
+
+
+<div class="sindhi">
+
+سنڌي ۽ اردو گيتن ۽ آوازن کي محفوظ ۽ منظم ڪرڻ لاءِ
+هي repository تيار ڪئي پئي وڃي.
+
+</div>
+
+</section>
 
 </main>
 
 
+
 <footer>
-  <p>© 2026 Sindhi Urdu Vocal Repository</p>
-  <p>Created by Deedar Shahbaz</p>
+
+<p>
+© 2026 Sindhi Urdu Vocal Repository
+</p>
+
+<p>
+Created by Deedar Shahbaz
+</p>
+
 </footer>
+
 
 
 <script>
 
-  /*
-   * Sindhi Urdu Vocal Repository
-   * Local Vocal Storage System
-   *
-   * Features:
-   * - Select audio
-   * - Save audio
-   * - Load saved audio
-   * - Play audio
-   * - Download audio
-   * - Delete audio
-   * - Duplicate protection
-   * - File size display
-   * - Persistent browser storage
-   */
 
+const audioFile =
+document.getElementById("audioFile");
 
-  const audioFile = document.getElementById("audioFile");
-  const fileInfo = document.getElementById("fileInfo");
-  const saveBtn = document.getElementById("saveBtn");
-  const message = document.getElementById("message");
-  const vocalList = document.getElementById("vocalList");
+const fileInfo =
+document.getElementById("fileInfo");
 
-  let selectedFile = null;
+const saveBtn =
+document.getElementById("saveBtn");
 
+const message =
+document.getElementById("message");
 
-  // =========================================================
-  // STORAGE KEY
-  // =========================================================
+const vocalList =
+document.getElementById("vocalList");
 
-  const STORAGE_KEY = "sindhiUrduVocalRepository";
 
+let selectedFile = null;
 
-  // =========================================================
-  // SELECT AUDIO FILE
-  // =========================================================
 
-  audioFile.addEventListener("change", function () {
+const STORAGE_KEY =
+"sindhiUrduVocalRepository";
 
-    message.textContent = "";
 
-    if (!this.files || this.files.length === 0) {
 
-      selectedFile = null;
+/* =====================================
+   CHOOSE FILE
+===================================== */
 
-      saveBtn.style.display = "none";
+audioFile.addEventListener(
+"change",
+function(){
 
-      fileInfo.textContent = "No file selected";
+message.textContent="";
 
-      return;
-    }
 
+if(!this.files || this.files.length===0){
 
-    selectedFile = this.files[0];
+selectedFile=null;
 
+fileInfo.textContent=
+"No file selected";
 
-    // Check file type
+saveBtn.style.display="none";
 
-    if (!selectedFile.type.startsWith("audio/")) {
+return;
 
-      message.textContent =
-        "⚠️ Please select an audio file.";
+}
 
-      selectedFile = null;
 
-      saveBtn.style.display = "none";
+selectedFile=this.files[0];
 
-      audioFile.value = "";
 
-      fileInfo.textContent =
-        "No file selected";
+if(!selectedFile.type.startsWith("audio/")){
 
-      return;
-    }
+message.textContent=
+"⚠️ Please select an audio file.";
 
+selectedFile=null;
 
-    // Display file information
+this.value="";
 
-    const size =
-      formatFileSize(selectedFile.size);
+fileInfo.textContent=
+"No file selected";
 
-    fileInfo.innerHTML =
-      "🎵 Selected: <strong>" +
-      escapeHTML(selectedFile.name) +
-      "</strong><br>" +
-      "📦 Size: " +
-      size;
+saveBtn.style.display="none";
 
+return;
 
-    saveBtn.style.display = "inline-block";
+}
 
-  });
 
+fileInfo.innerHTML=
+"🎵 <strong>Selected:</strong> "+
+escapeHTML(selectedFile.name)+
+"<br>"+
+"📦 Size: "+
+formatFileSize(selectedFile.size);
 
-  // =========================================================
-  // SAVE VOCAL
-  // =========================================================
 
-  saveBtn.addEventListener("click", async function () {
+saveBtn.style.display=
+"inline-block";
 
-    if (!selectedFile) {
+});
 
-      message.textContent =
-        "⚠️ Please select an audio file first.";
 
-      return;
-    }
 
+/* =====================================
+   SAVE VOCAL
+===================================== */
 
-    saveBtn.disabled = true;
+saveBtn.addEventListener(
+"click",
+async function(){
 
-    saveBtn.textContent =
-      "⏳ Saving...";
+if(!selectedFile){
 
+message.textContent=
+"⚠️ Please select an audio file.";
 
-    try {
+return;
 
-      const vocals =
-        getSavedVocals();
+}
 
 
-      // Create unique ID
+saveBtn.disabled=true;
 
-      const vocal = {
+saveBtn.textContent=
+"⏳ Saving...";
 
-        id:
-          Date.now().toString() +
-          "-" +
-          Math.random()
-            .toString(36)
-            .substring(2, 9),
 
-        name: selectedFile.name,
+try{
 
-        type: selectedFile.type,
+const vocals=
+getSavedVocals();
 
-        size: selectedFile.size,
 
-        data: null,
+const duplicate=
+vocals.some(function(vocal){
 
-        date: new Date().toLocaleString()
+return(
+vocal.name===
+selectedFile.name &&
+vocal.size===
+selectedFile.size
+);
 
-      };
+});
 
 
-      // Convert audio to Data URL
+if(duplicate){
 
-      const dataURL =
-        await fileToDataURL(selectedFile);
+message.textContent=
+"⚠️ This vocal is already saved.";
 
+saveBtn.disabled=false;
 
-      vocal.data = dataURL;
+saveBtn.textContent=
+"💾 Save Vocal";
 
+return;
 
-      // Check duplicate
+}
 
-      const duplicate =
-        vocals.some(function (item) {
 
-          return (
-            item.name === vocal.name &&
-            item.size === vocal.size
-          );
+const data=
+await fileToDataURL(selectedFile);
 
-        });
 
+const vocal={
 
-      if (duplicate) {
+id:
+Date.now()+"-"+Math.random()
+.toString(36)
+.substring(2,9),
 
-        message.textContent =
-          "⚠️ This vocal is already saved.";
+name:selectedFile.name,
 
-        saveBtn.disabled = false;
+type:selectedFile.type,
 
-        saveBtn.textContent =
-          "💾 Save Vocal";
+size:selectedFile.size,
 
-        return;
-      }
+data:data,
 
+date:new Date().toLocaleString()
 
-      // Add new vocal
+};
 
-      vocals.push(vocal);
 
+vocals.push(vocal);
 
-      saveVocals(vocals);
 
+localStorage.setItem(
+STORAGE_KEY,
+JSON.stringify(vocals)
+);
 
-      // Success
 
-      message.textContent =
-        "✅ Vocal saved successfully!";
+message.textContent=
+"✅ Vocal saved successfully!";
 
 
-      // Reset upload
+selectedFile=null;
 
-      selectedFile = null;
+audioFile.value="";
 
-      audioFile.value = "";
+fileInfo.textContent=
+"No file selected";
 
-      fileInfo.textContent =
-        "No file selected";
+saveBtn.style.display=
+"none";
 
-      saveBtn.style.display =
-        "none";
 
+displayVocals();
 
-      displayVocals();
+}
 
-    }
+catch(error){
 
-    catch (error) {
+console.error(error);
 
-      console.error(error);
+message.textContent=
+"❌ Could not save this file. "+
+"The browser storage limit may have been reached.";
 
-      message.textContent =
-        "❌ Could not save the vocal. The file may be too large for browser storage.";
+}
 
-    }
 
+saveBtn.disabled=false;
 
-    saveBtn.disabled = false;
+saveBtn.textContent=
+"💾 Save Vocal";
 
-    saveBtn.textContent =
-      "💾 Save Vocal";
+});
 
-  });
 
 
-  // =========================================================
-  // FILE TO DATA URL
-  // =========================================================
+/* =====================================
+   FILE READER
+===================================== */
 
-  function fileToDataURL(file) {
+function fileToDataURL(file){
 
-    return new Promise(function (resolve, reject) {
+return new Promise(
+function(resolve,reject){
 
-      const reader =
-        new FileReader();
+const reader=
+new FileReader();
 
 
-      reader.onload =
-        function () {
+reader.onload=
+function(){
 
-          resolve(reader.result);
+resolve(reader.result);
 
-        };
+};
 
 
-      reader.onerror =
-        function () {
+reader.onerror=
+function(){
 
-          reject(reader.error);
+reject(reader.error);
 
-        };
+};
 
 
-      reader.readAsDataURL(file);
+reader.readAsDataURL(file);
 
-    });
+});
 
-  }
+}
 
 
-  // =========================================================
-  // GET SAVED VOCALS
-  // =========================================================
 
-  function getSavedVocals() {
+/* =====================================
+   GET VOCALS
+===================================== */
 
-    try {
+function getSavedVocals(){
 
-      const saved =
-        localStorage.getItem(STORAGE_KEY);
+try{
 
-      if (!saved) {
-        return [];
-      }
+const saved=
+localStorage.getItem(STORAGE_KEY);
 
-      const vocals =
-        JSON.parse(saved);
+if(!saved){
 
-      return Array.isArray(vocals)
-        ? vocals
-        : [];
+return [];
 
-    }
+}
 
-    catch (error) {
 
-      console.error(
-        "Storage read error:",
-        error
-      );
+const vocals=
+JSON.parse(saved);
 
-      return [];
 
-    }
+return Array.isArray(vocals)
+? vocals
+: [];
 
-  }
+}
 
+catch(error){
 
-  // =========================================================
-  // SAVE VOCALS TO LOCAL STORAGE
-  // =========================================================
+console.error(error);
 
-  function saveVocals(vocals) {
+return [];
 
-    try {
+}
 
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(vocals)
-      );
+}
 
-      return true;
 
-    }
 
-    catch (error) {
+/* =====================================
+   DISPLAY VOCALS
+===================================== */
 
-      console.error(
-        "Storage save error:",
-        error
-      );
+function displayVocals(){
 
-      throw error;
+const vocals=
+getSavedVocals();
 
-    }
 
-  }
+if(vocals.length===0){
 
+vocalList.innerHTML=
+`
+<div class="empty">
+No vocals saved yet.
+</div>
+`;
 
-  // =========================================================
-  // DISPLAY SAVED VOCALS
-  // =========================================================
+return;
 
-  function displayVocals() {
+}
 
-    const vocals =
-      getSavedVocals();
 
+vocalList.innerHTML="";
 
-    if (vocals.length === 0) {
 
-      vocalList.innerHTML =
-        `
-        <div class="empty">
-          No vocals saved yet.
-        </div>
-        `;
+vocals.forEach(
+function(vocal){
 
-      return;
-    }
+const item=
+document.createElement("div");
 
+item.className=
+"vocal-item";
 
-    vocalList.innerHTML = "";
 
+const title=
+document.createElement("strong");
 
-    vocals.forEach(
-      function (vocal, index) {
+title.textContent=
+"🎵 "+vocal.name;
 
-        const item =
-          document.createElement("div");
 
-        item.className =
-          "vocal-item";
+const details=
+document.createElement("p");
 
+details.textContent=
+"Saved: "+
+vocal.date+
+" • Size: "+
+formatFileSize(vocal.size);
 
-        const title =
-          document.createElement("strong");
 
-        title.textContent =
-          "🎵 " + vocal.name;
+const audio=
+document.createElement("audio");
 
+audio.controls=true;
 
-        const details =
-          document.createElement("p");
+audio.preload="metadata";
 
-        details.textContent =
-          "Saved: " +
-          vocal.date +
-          " • Size: " +
-          formatFileSize(vocal.size);
+audio.src=vocal.data;
 
 
-        const audio =
-          document.createElement("audio");
+const actions=
+document.createElement("div");
 
-        audio.controls = true;
+actions.className=
+"action-buttons";
 
-        audio.preload = "metadata";
 
-        audio.src = vocal.data;
+/* DOWNLOAD */
 
+const download=
+document.createElement("a");
 
-        const actions =
-          document.createElement("div");
+download.className=
+"download-btn";
 
-        actions.className =
-          "action-buttons";
+download.textContent=
+"⬇️ Download Vocal";
 
+download.href=
+vocal.data;
 
-        // Download button
+download.download=
+vocal.name;
 
-        const download =
-          document.createElement("a");
 
-        download.className =
-          "download-btn";
+/* DELETE */
 
-        download.textContent =
-          "⬇️ Download Vocal";
+const deleteButton=
+document.createElement("button");
 
-        download.href =
-          vocal.data;
+deleteButton.className=
+"delete-btn";
 
-        download.download =
-          vocal.name;
+deleteButton.textContent=
+"🗑️ Delete";
 
 
-        // Delete button
+deleteButton.addEventListener(
+"click",
+function(){
 
-        const deleteButton =
-          document.createElement("button");
+deleteVocal(vocal.id);
 
-        deleteButton.className =
-          "delete-btn";
+});
 
-        deleteButton.textContent =
-          "🗑️ Delete";
 
+actions.appendChild(download);
 
-        deleteButton.addEventListener(
-          "click",
-          function () {
+actions.appendChild(deleteButton);
 
-            deleteVocal(vocal.id);
 
-          }
-        );
+item.appendChild(title);
 
+item.appendChild(details);
 
-        actions.appendChild(download);
+item.appendChild(audio);
 
-        actions.appendChild(deleteButton);
+item.appendChild(actions);
 
 
-        item.appendChild(title);
+vocalList.appendChild(item);
 
-        item.appendChild(details);
+});
 
-        item.appendChild(audio);
+}
 
-        item.appendChild(actions);
 
 
-        vocalList.appendChild(item);
+/* =====================================
+   DELETE
+===================================== */
 
-      }
-    );
+function deleteVocal(id){
 
-  }
+const vocals=
+getSavedVocals();
 
 
-  // =========================================================
-  // DELETE VOCAL
-  // =========================================================
+const vocal=
+vocals.find(
+function(item){
 
-  function deleteVocal(id) {
+return item.id===id;
 
-    const vocals =
-      getSavedVocals();
+});
 
 
-    const vocal =
-      vocals.find(function (item) {
+if(!vocal){
 
-        return item.id === id;
+return;
 
-      });
+}
 
 
-    if (!vocal) {
-      return;
-    }
+if(!confirm(
+"Delete this vocal?\n\n"+
+vocal.name
+)){
 
+return;
 
-    const confirmed =
-      confirm(
-        "Delete this vocal?\n\n" +
-        vocal.name
-      );
+}
 
 
-    if (!confirmed) {
-      return;
-    }
+const updated=
+vocals.filter(
+function(item){
 
+return item.id!==id;
 
-    const updatedVocals =
-      vocals.filter(function (item) {
+});
 
-        return item.id !== id;
 
-      });
+localStorage.setItem(
+STORAGE_KEY,
+JSON.stringify(updated)
+);
 
 
-    saveVocals(updatedVocals);
+message.textContent=
+"🗑️ Vocal deleted.";
 
 
-    message.textContent =
-      "🗑️ Vocal deleted.";
+displayVocals();
 
+}
 
-    displayVocals();
 
-  }
 
+/* =====================================
+   FILE SIZE
+===================================== */
 
-  // =========================================================
-  // FORMAT FILE SIZE
-  // =========================================================
+function formatFileSize(bytes){
 
-  function formatFileSize(bytes) {
+if(!bytes){
 
-    if (!bytes || bytes === 0) {
+return "0 Bytes";
 
-      return "0 Bytes";
+}
 
-    }
 
+const units=[
+"Bytes",
+"KB",
+"MB",
+"GB"
+];
 
-    const units = [
-      "Bytes",
-      "KB",
-      "MB",
-      "GB"
-    ];
 
+const index=
+Math.floor(
+Math.log(bytes)/
+Math.log(1024)
+);
 
-    const index =
-      Math.floor(
-        Math.log(bytes) /
-        Math.log(1024)
-      );
 
+return(
+parseFloat(
+(
+bytes/
+Math.pow(1024,index)
+).toFixed(2)
+)+
+" "+
+units[index]
+);
 
-    return (
-      parseFloat(
-        (
-          bytes /
-          Math.pow(1024, index)
-        ).toFixed(2)
-      ) +
-      " " +
-      units[index]
-    );
+}
 
-  }
 
 
-  // =========================================================
-  // HTML ESCAPING
-  // =========================================================
+/* =====================================
+   SECURITY
+===================================== */
 
-  function escapeHTML(text) {
+function escapeHTML(text){
 
-    return String(text)
+return String(text)
 
-      .replace(
-        /&/g,
-        "&amp;"
-      )
+.replace(/&/g,"&amp;")
 
-      .replace(
-        /</g,
-        "&lt;"
-      )
+.replace(/</g,"&lt;")
 
-      .replace(
-        />/g,
-        "&gt;"
-      )
+.replace(/>/g,"&gt;")
 
-      .replace(
-        /"/g,
-        "&quot;"
-      )
+.replace(/"/g,"&quot;")
 
-      .replace(
-        /'/g,
-        "&#039;"
-      );
+.replace(/'/g,"&#039;");
 
-  }
+}
 
 
-  // =========================================================
-  // LOAD REPOSITORY WHEN PAGE OPENS
-  // =========================================================
 
-  displayVocals();
+/* =====================================
+   LOAD SAVED VOCALS
+===================================== */
+
+displayVocals();
 
 
 </script>
