@@ -78,17 +78,20 @@
       margin-top: 20px;
     }
 
-    button {
+    button,
+    .download-btn {
       border: none;
       padding: 12px 18px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 15px;
-      background: #222;
       color: white;
+      text-decoration: none;
+      display: inline-block;
     }
 
-    button:hover {
+    button:hover,
+    .download-btn:hover {
       opacity: 0.85;
     }
 
@@ -104,19 +107,54 @@
       border-radius: 8px;
     }
 
+    .vocal-item strong {
+      display: block;
+      word-break: break-word;
+    }
+
+    .vocal-item p {
+      margin-top: 5px;
+      color: #555;
+      font-size: 14px;
+    }
+
     .vocal-item audio {
       width: 100%;
-      margin-top: 10px;
+      margin-top: 12px;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .download-btn {
+      background: #0757a8;
     }
 
     .delete-btn {
       background: #b00020;
-      margin-top: 10px;
     }
 
     #message {
       margin-top: 15px;
       font-weight: bold;
+    }
+
+    .storage-info {
+      margin-top: 15px;
+      padding: 12px;
+      background: #eef5ff;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 20px;
+      color: #777;
     }
 
     footer {
@@ -125,6 +163,21 @@
       margin-top: 40px;
       background: #222;
       color: white;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 22px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      button,
+      .download-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -183,7 +236,14 @@
     <h2>📚 Saved Vocals</h2>
 
     <div id="vocalList">
-      <p>No vocals saved yet.</p>
+      <div class="empty">
+        No vocals saved yet.
+      </div>
+    </div>
+
+    <div class="storage-info">
+      💾 <strong>Local Repository:</strong>
+      Your saved vocals are stored in this browser on this device.
     </div>
 
   </section>
@@ -218,6 +278,23 @@
 
 <script>
 
+  /*
+   * Sindhi Urdu Vocal Repository
+   * Local Vocal Storage System
+   *
+   * Features:
+   * - Select audio
+   * - Save audio
+   * - Load saved audio
+   * - Play audio
+   * - Download audio
+   * - Delete audio
+   * - Duplicate protection
+   * - File size display
+   * - Persistent browser storage
+   */
+
+
   const audioFile = document.getElementById("audioFile");
   const fileInfo = document.getElementById("fileInfo");
   const saveBtn = document.getElementById("saveBtn");
@@ -227,154 +304,585 @@
   let selectedFile = null;
 
 
-  // Select audio
+  // =========================================================
+  // STORAGE KEY
+  // =========================================================
+
+  const STORAGE_KEY = "sindhiUrduVocalRepository";
+
+
+  // =========================================================
+  // SELECT AUDIO FILE
+  // =========================================================
+
   audioFile.addEventListener("change", function () {
 
-    if (this.files.length === 0) {
+    message.textContent = "";
+
+    if (!this.files || this.files.length === 0) {
+
       selectedFile = null;
+
       saveBtn.style.display = "none";
+
       fileInfo.textContent = "No file selected";
+
       return;
     }
 
+
     selectedFile = this.files[0];
 
-    fileInfo.textContent =
-      "Selected: " + selectedFile.name;
+
+    // Check file type
+
+    if (!selectedFile.type.startsWith("audio/")) {
+
+      message.textContent =
+        "⚠️ Please select an audio file.";
+
+      selectedFile = null;
+
+      saveBtn.style.display = "none";
+
+      audioFile.value = "";
+
+      fileInfo.textContent =
+        "No file selected";
+
+      return;
+    }
+
+
+    // Display file information
+
+    const size =
+      formatFileSize(selectedFile.size);
+
+    fileInfo.innerHTML =
+      "🎵 Selected: <strong>" +
+      escapeHTML(selectedFile.name) +
+      "</strong><br>" +
+      "📦 Size: " +
+      size;
+
 
     saveBtn.style.display = "inline-block";
-
-    message.textContent = "";
 
   });
 
 
-  // Save vocal
-  saveBtn.addEventListener("click", function () {
+  // =========================================================
+  // SAVE VOCAL
+  // =========================================================
+
+  saveBtn.addEventListener("click", async function () {
 
     if (!selectedFile) {
+
       message.textContent =
         "⚠️ Please select an audio file first.";
+
       return;
     }
 
-    const reader = new FileReader();
 
-    reader.onload = function () {
+    saveBtn.disabled = true;
+
+    saveBtn.textContent =
+      "⏳ Saving...";
+
+
+    try {
 
       const vocals =
-        JSON.parse(localStorage.getItem("savedVocals")) || [];
+        getSavedVocals();
+
+
+      // Create unique ID
 
       const vocal = {
+
+        id:
+          Date.now().toString() +
+          "-" +
+          Math.random()
+            .toString(36)
+            .substring(2, 9),
+
         name: selectedFile.name,
+
         type: selectedFile.type,
-        data: reader.result,
+
+        size: selectedFile.size,
+
+        data: null,
+
         date: new Date().toLocaleString()
+
       };
+
+
+      // Convert audio to Data URL
+
+      const dataURL =
+        await fileToDataURL(selectedFile);
+
+
+      vocal.data = dataURL;
+
+
+      // Check duplicate
+
+      const duplicate =
+        vocals.some(function (item) {
+
+          return (
+            item.name === vocal.name &&
+            item.size === vocal.size
+          );
+
+        });
+
+
+      if (duplicate) {
+
+        message.textContent =
+          "⚠️ This vocal is already saved.";
+
+        saveBtn.disabled = false;
+
+        saveBtn.textContent =
+          "💾 Save Vocal";
+
+        return;
+      }
+
+
+      // Add new vocal
 
       vocals.push(vocal);
 
-      localStorage.setItem(
-        "savedVocals",
-        JSON.stringify(vocals)
-      );
+
+      saveVocals(vocals);
+
+
+      // Success
 
       message.textContent =
         "✅ Vocal saved successfully!";
 
+
+      // Reset upload
+
       selectedFile = null;
+
       audioFile.value = "";
-      fileInfo.textContent = "No file selected";
-      saveBtn.style.display = "none";
+
+      fileInfo.textContent =
+        "No file selected";
+
+      saveBtn.style.display =
+        "none";
+
 
       displayVocals();
 
-    };
+    }
 
-    reader.readAsDataURL(selectedFile);
+    catch (error) {
+
+      console.error(error);
+
+      message.textContent =
+        "❌ Could not save the vocal. The file may be too large for browser storage.";
+
+    }
+
+
+    saveBtn.disabled = false;
+
+    saveBtn.textContent =
+      "💾 Save Vocal";
 
   });
 
 
-  // Display saved vocals
-  function displayVocals() {
+  // =========================================================
+  // FILE TO DATA URL
+  // =========================================================
 
-    const vocals =
-      JSON.parse(localStorage.getItem("savedVocals")) || [];
+  function fileToDataURL(file) {
 
-    if (vocals.length === 0) {
+    return new Promise(function (resolve, reject) {
 
-      vocalList.innerHTML =
-        "<p>No vocals saved yet.</p>";
+      const reader =
+        new FileReader();
 
-      return;
-    }
 
-    vocalList.innerHTML = "";
+      reader.onload =
+        function () {
 
-    vocals.forEach(function (vocal, index) {
+          resolve(reader.result);
 
-      const item =
-        document.createElement("div");
+        };
 
-      item.className = "vocal-item";
 
-      item.innerHTML = `
-        <strong>🎵 ${escapeHTML(vocal.name)}</strong>
+      reader.onerror =
+        function () {
 
-        <p>Saved: ${escapeHTML(vocal.date)}</p>
+          reject(reader.error);
 
-        <audio controls src="${vocal.data}"></audio>
+        };
 
-        <br>
 
-        <button
-          class="delete-btn"
-          onclick="deleteVocal(${index})">
-          🗑️ Delete
-        </button>
-      `;
-
-      vocalList.appendChild(item);
+      reader.readAsDataURL(file);
 
     });
 
   }
 
 
-  // Delete vocal
-  function deleteVocal(index) {
+  // =========================================================
+  // GET SAVED VOCALS
+  // =========================================================
+
+  function getSavedVocals() {
+
+    try {
+
+      const saved =
+        localStorage.getItem(STORAGE_KEY);
+
+      if (!saved) {
+        return [];
+      }
+
+      const vocals =
+        JSON.parse(saved);
+
+      return Array.isArray(vocals)
+        ? vocals
+        : [];
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "Storage read error:",
+        error
+      );
+
+      return [];
+
+    }
+
+  }
+
+
+  // =========================================================
+  // SAVE VOCALS TO LOCAL STORAGE
+  // =========================================================
+
+  function saveVocals(vocals) {
+
+    try {
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(vocals)
+      );
+
+      return true;
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "Storage save error:",
+        error
+      );
+
+      throw error;
+
+    }
+
+  }
+
+
+  // =========================================================
+  // DISPLAY SAVED VOCALS
+  // =========================================================
+
+  function displayVocals() {
 
     const vocals =
-      JSON.parse(localStorage.getItem("savedVocals")) || [];
+      getSavedVocals();
 
-    vocals.splice(index, 1);
 
-    localStorage.setItem(
-      "savedVocals",
-      JSON.stringify(vocals)
+    if (vocals.length === 0) {
+
+      vocalList.innerHTML =
+        `
+        <div class="empty">
+          No vocals saved yet.
+        </div>
+        `;
+
+      return;
+    }
+
+
+    vocalList.innerHTML = "";
+
+
+    vocals.forEach(
+      function (vocal, index) {
+
+        const item =
+          document.createElement("div");
+
+        item.className =
+          "vocal-item";
+
+
+        const title =
+          document.createElement("strong");
+
+        title.textContent =
+          "🎵 " + vocal.name;
+
+
+        const details =
+          document.createElement("p");
+
+        details.textContent =
+          "Saved: " +
+          vocal.date +
+          " • Size: " +
+          formatFileSize(vocal.size);
+
+
+        const audio =
+          document.createElement("audio");
+
+        audio.controls = true;
+
+        audio.preload = "metadata";
+
+        audio.src = vocal.data;
+
+
+        const actions =
+          document.createElement("div");
+
+        actions.className =
+          "action-buttons";
+
+
+        // Download button
+
+        const download =
+          document.createElement("a");
+
+        download.className =
+          "download-btn";
+
+        download.textContent =
+          "⬇️ Download Vocal";
+
+        download.href =
+          vocal.data;
+
+        download.download =
+          vocal.name;
+
+
+        // Delete button
+
+        const deleteButton =
+          document.createElement("button");
+
+        deleteButton.className =
+          "delete-btn";
+
+        deleteButton.textContent =
+          "🗑️ Delete";
+
+
+        deleteButton.addEventListener(
+          "click",
+          function () {
+
+            deleteVocal(vocal.id);
+
+          }
+        );
+
+
+        actions.appendChild(download);
+
+        actions.appendChild(deleteButton);
+
+
+        item.appendChild(title);
+
+        item.appendChild(details);
+
+        item.appendChild(audio);
+
+        item.appendChild(actions);
+
+
+        vocalList.appendChild(item);
+
+      }
     );
+
+  }
+
+
+  // =========================================================
+  // DELETE VOCAL
+  // =========================================================
+
+  function deleteVocal(id) {
+
+    const vocals =
+      getSavedVocals();
+
+
+    const vocal =
+      vocals.find(function (item) {
+
+        return item.id === id;
+
+      });
+
+
+    if (!vocal) {
+      return;
+    }
+
+
+    const confirmed =
+      confirm(
+        "Delete this vocal?\n\n" +
+        vocal.name
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    const updatedVocals =
+      vocals.filter(function (item) {
+
+        return item.id !== id;
+
+      });
+
+
+    saveVocals(updatedVocals);
+
+
+    message.textContent =
+      "🗑️ Vocal deleted.";
+
 
     displayVocals();
 
   }
 
 
-  // Basic HTML escaping
-  function escapeHTML(text) {
+  // =========================================================
+  // FORMAT FILE SIZE
+  // =========================================================
 
-    return text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+  function formatFileSize(bytes) {
+
+    if (!bytes || bytes === 0) {
+
+      return "0 Bytes";
+
+    }
+
+
+    const units = [
+      "Bytes",
+      "KB",
+      "MB",
+      "GB"
+    ];
+
+
+    const index =
+      Math.floor(
+        Math.log(bytes) /
+        Math.log(1024)
+      );
+
+
+    return (
+      parseFloat(
+        (
+          bytes /
+          Math.pow(1024, index)
+        ).toFixed(2)
+      ) +
+      " " +
+      units[index]
+    );
 
   }
 
 
-  // Load saved vocals
+  // =========================================================
+  // HTML ESCAPING
+  // =========================================================
+
+  function escapeHTML(text) {
+
+    return String(text)
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  // =========================================================
+  // LOAD REPOSITORY WHEN PAGE OPENS
+  // =========================================================
+
   displayVocals();
+
 
 </script>
 
