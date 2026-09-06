@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sindhi Urdu Vocal Repository</title>
+<title>Sindhi Urdu Background Music Repository</title>
 
 <style>
 *{
@@ -84,8 +84,39 @@ word-break:break-word;
 font-size:15px;
 }
 
+.start-section{
+margin-top:20px;
+padding:18px;
+background:#f0f5ff;
+border-radius:10px;
+}
+
+.start-section label{
+display:block;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+#startTime{
+width:100%;
+padding:12px;
+font-size:17px;
+border:1px solid #bbb;
+border-radius:8px;
+}
+
+.count-preview{
+margin-top:15px;
+font-size:24px;
+font-weight:bold;
+text-align:center;
+letter-spacing:5px;
+}
+
 .buttons{
 display:flex;
+flex-wrap:wrap;
+gap:10px;
 justify-content:center;
 margin-top:20px;
 }
@@ -104,11 +135,33 @@ display:inline-block;
 
 button:disabled{
 opacity:.6;
+cursor:not-allowed;
+}
+
+#processBtn{
+background:#0757a8;
 }
 
 #saveBtn{
 background:#087f23;
 display:none;
+}
+
+#previewBtn{
+background:#6a1b9a;
+}
+
+#message{
+margin-top:15px;
+font-weight:bold;
+}
+
+.status{
+margin-top:15px;
+padding:12px;
+background:#fff8e1;
+border-radius:8px;
+font-size:14px;
 }
 
 .vocal-item{
@@ -147,11 +200,6 @@ background:#0757a8;
 
 .delete-btn{
 background:#b00020;
-}
-
-#message{
-margin-top:15px;
-font-weight:bold;
 }
 
 .storage-info{
@@ -200,24 +248,26 @@ text-align:center;
 
 <header>
 
-<h1>🎵 Sindhi Urdu Vocal Repository</h1>
+<h1>🎵 Sindhi Urdu Background Music Repository</h1>
 
-<p>Store and manage Sindhi & Urdu vocal recordings</p>
+<p>Background music with singer count-in</p>
 
 <div class="sindhi">
-سنڌي ۽ اردو آواز جو ذخيرو
+سنڌي ۽ اردو پسمنظر موسيقي جو ذخيرو
 </div>
 
 </header>
-
 
 <main class="container">
 
 <section class="card">
 
-<h2>🎙️ Upload Vocal</h2>
+<h2>🎵 Upload Song</h2>
 
-<p>Select your vocal audio file.</p>
+<p>
+Upload the original song. The final saved recording should contain
+background music only — not the singer's voice.
+</p>
 
 <div class="upload-box">
 
@@ -232,15 +282,59 @@ accept=".mp3,.wav,.m4a,.ogg,.aac,.flac,audio/*"
 No file selected
 </div>
 
+<div class="start-section">
+
+<label for="startTime">
+⏱️ Singer Vocal Starting Point
+</label>
+
+<input
+type="number"
+id="startTime"
+min="0"
+step="0.1"
+value="0"
+placeholder="Enter seconds"
+>
+
+<div class="count-preview">
+1 → 2 → 3 → 4 → 🎤
+</div>
+
+<p style="margin-top:10px;">
+The count-in will mark the point where the singer should begin.
+</p>
+
+</div>
+
 <div class="buttons">
 
-<button id="saveBtn" type="button">
-💾 Save Vocal
+<button
+id="previewBtn"
+type="button"
+>
+▶️ Preview Original
+</button>
+
+<button
+id="processBtn"
+type="button"
+>
+🎛️ Prepare Background Music
+</button>
+
+<button
+id="saveBtn"
+type="button"
+>
+💾 Save Background
 </button>
 
 </div>
 
 <div id="message"></div>
+
+<div id="status" class="status" style="display:none;"></div>
 
 </div>
 
@@ -249,12 +343,27 @@ No file selected
 
 <section class="card">
 
-<h2>📚 Saved Vocals</h2>
+<h2>🎼 Prepared Background</h2>
+
+<div id="preparedArea">
+
+<div class="empty">
+No background music prepared yet.
+</div>
+
+</div>
+
+</section>
+
+
+<section class="card">
+
+<h2>📚 Saved Background Music</h2>
 
 <div id="vocalList">
 
 <div class="empty">
-No vocals saved yet.
+No background music saved yet.
 </div>
 
 </div>
@@ -267,7 +376,12 @@ Saved recordings remain in this browser on this device.
 <br><br>
 
 📦 <strong>Storage:</strong>
-Audio files are stored using IndexedDB instead of localStorage.
+Audio files are stored using IndexedDB.
+
+<br><br>
+
+🔇 <strong>Saved Audio:</strong>
+Background music only. Original singer voice should not be saved.
 
 </div>
 
@@ -279,24 +393,22 @@ Audio files are stored using IndexedDB instead of localStorage.
 <h2>🎼 About This Repository</h2>
 
 <p>
-This project is designed to collect and organize
-Sindhi and Urdu vocal recordings for singers,
-poets, musicians and creators.
+This repository is designed to organize Sindhi and Urdu
+background music for singers, poets, musicians and creators.
 </p>
 
 <div class="sindhi">
-سنڌي ۽ اردو گيتن ۽ آوازن کي محفوظ ۽ منظم ڪرڻ لاءِ
-هي repository تيار ڪئي پئي وڃي.
+هي repository سنڌي ۽ اردو گلوڪارن لاءِ
+پسمنظر موسيقي ۽ ڳائڻ جي شروعات واري counting محفوظ ڪرڻ لاءِ تيار ڪئي وئي آهي.
 </div>
 
 </section>
 
 </main>
 
-
 <footer>
 
-<p>© 2026 Sindhi Urdu Vocal Repository</p>
+<p>© 2026 Sindhi Urdu Background Music Repository</p>
 
 <p>Created by Deedar Shahbaz</p>
 
@@ -306,15 +418,24 @@ poets, musicians and creators.
 <script>
 
 /* =====================================================
-   INDEXEDDB VOCAL REPOSITORY
+   DATABASE
 ===================================================== */
 
-const DB_NAME = "SindhiUrduVocalRepositoryDB";
+const DB_NAME =
+"SindhiUrduBackgroundMusicDB";
+
 const DB_VERSION = 1;
-const STORE_NAME = "vocals";
+
+const STORE_NAME =
+"backgroundMusic";
 
 let db = null;
+
 let selectedFile = null;
+
+let preparedAudio = null;
+
+let originalAudioURL = null;
 
 
 /* =====================================================
@@ -327,11 +448,26 @@ document.getElementById("audioFile");
 const fileInfo =
 document.getElementById("fileInfo");
 
+const startTime =
+document.getElementById("startTime");
+
+const previewBtn =
+document.getElementById("previewBtn");
+
+const processBtn =
+document.getElementById("processBtn");
+
 const saveBtn =
 document.getElementById("saveBtn");
 
 const message =
 document.getElementById("message");
+
+const status =
+document.getElementById("status");
+
+const preparedArea =
+document.getElementById("preparedArea");
 
 const vocalList =
 document.getElementById("vocalList");
@@ -348,14 +484,17 @@ return new Promise(function(resolve,reject){
 const request =
 indexedDB.open(DB_NAME,DB_VERSION);
 
-
 request.onupgradeneeded =
 function(event){
 
 const database =
 event.target.result;
 
-if(!database.objectStoreNames.contains(STORE_NAME)){
+if(
+!database.objectStoreNames.contains(
+STORE_NAME
+)
+){
 
 database.createObjectStore(
 STORE_NAME,
@@ -368,7 +507,6 @@ keyPath:"id"
 
 };
 
-
 request.onsuccess =
 function(event){
 
@@ -378,7 +516,6 @@ event.target.result;
 resolve(db);
 
 };
-
 
 request.onerror =
 function(){
@@ -393,22 +530,35 @@ reject(request.error);
 
 
 /* =====================================================
-   SELECT FILE
+   FILE SELECT
 ===================================================== */
 
-audioFile.addEventListener("change",function(){
+audioFile.addEventListener(
+"change",
+function(){
 
 message.textContent = "";
 
-if(!this.files || this.files.length === 0){
+saveBtn.style.display = "none";
+
+preparedAudio = null;
+
+preparedArea.innerHTML =
+`
+<div class="empty">
+No background music prepared yet.
+</div>
+`;
+
+if(
+!this.files ||
+this.files.length === 0
+){
 
 selectedFile = null;
 
 fileInfo.textContent =
 "No file selected";
-
-saveBtn.style.display =
-"none";
 
 return;
 
@@ -416,7 +566,6 @@ return;
 
 selectedFile =
 this.files[0];
-
 
 fileInfo.innerHTML =
 "🎵 <strong>Selected:</strong> " +
@@ -426,77 +575,361 @@ escapeHTML(selectedFile.name) +
 formatFileSize(selectedFile.size) +
 "<br>" +
 "🎧 Type: " +
-(selectedFile.type || "Audio");
-
-
-saveBtn.style.display =
-"inline-block";
-
+(
+selectedFile.type ||
+"Audio"
+);
 
 message.textContent =
-"✅ File ready to save.";
+"✅ Song ready.";
 
 });
 
 
 /* =====================================================
-   SAVE VOCAL
+   PREVIEW ORIGINAL
 ===================================================== */
 
-saveBtn.addEventListener("click",async function(){
+previewBtn.addEventListener(
+"click",
+function(){
 
 if(!selectedFile){
 
 message.textContent =
-"⚠️ Please select an audio file first.";
+"⚠️ Please select a song first.";
 
 return;
 
 }
 
+if(originalAudioURL){
+
+URL.revokeObjectURL(
+originalAudioURL
+);
+
+}
+
+originalAudioURL =
+URL.createObjectURL(
+selectedFile
+);
+
+const audio =
+new Audio(originalAudioURL);
+
+audio.controls = true;
+
+audio.play();
+
+message.textContent =
+"▶️ Original song preview started.";
+
+});
+
+
+/* =====================================================
+   PREPARE BACKGROUND
+===================================================== */
+
+processBtn.addEventListener(
+"click",
+async function(){
+
+if(!selectedFile){
+
+message.textContent =
+"⚠️ Please select a song first.";
+
+return;
+
+}
+
+const point =
+parseFloat(startTime.value);
+
+if(
+isNaN(point) ||
+point < 0
+){
+
+message.textContent =
+"⚠️ Please enter a valid vocal starting point.";
+
+return;
+
+}
+
+processBtn.disabled = true;
+
+processBtn.textContent =
+"⏳ Preparing...";
+
+status.style.display =
+"block";
+
+status.textContent =
+"🎛️ Preparing background music...";
+
+message.textContent = "";
+
+
+/*
+=====================================================
+ IMPORTANT
+
+This is the connection point for your AI Vocal Maker.
+
+Your existing AI separation system must return
+the instrumental/background audio here.
+
+At the moment this function uses the uploaded
+audio as a temporary fallback so the repository
+can be tested.
+
+When connected to your AI endpoint:
+
+original song
+        ↓
+AI vocal separation
+        ↓
+background / instrumental
+        ↓
+count-in
+        ↓
+save
+=====================================================
+*/
+
+try{
+
+preparedAudio =
+await prepareBackgroundMusic(
+selectedFile,
+point
+);
+
+showPreparedAudio(
+preparedAudio,
+point
+);
+
+status.textContent =
+"✅ Background music prepared.";
+
+message.textContent =
+"✅ Ready to save background music.";
+
+saveBtn.style.display =
+"inline-block";
+
+}
+
+catch(error){
+
+console.error(error);
+
+message.textContent =
+"❌ Could not prepare background music.";
+
+status.textContent =
+"Please check the AI separation system.";
+
+}
+
+processBtn.disabled = false;
+
+processBtn.textContent =
+"🎛️ Prepare Background Music";
+
+});
+
+
+/* =====================================================
+   PREPARE BACKGROUND MUSIC
+
+   REPLACE THIS FUNCTION WITH YOUR EXISTING
+   AI SEPARATION API CALL.
+===================================================== */
+
+async function prepareBackgroundMusic(
+file,
+vocalStart
+){
+
+/*
+   TEMPORARY TEST MODE
+
+   IMPORTANT:
+   This does NOT remove vocals.
+
+   It simply creates a copy of the uploaded file
+   so that the repository and save system can
+   be tested.
+
+   Your existing AI separator should replace
+   this section.
+*/
+
+return new Blob(
+[file],
+{
+type:
+file.type ||
+"audio/mpeg"
+}
+);
+
+}
+
+
+/* =====================================================
+   SHOW PREPARED AUDIO
+===================================================== */
+
+function showPreparedAudio(
+blob,
+point
+){
+
+preparedArea.innerHTML = "";
+
+const box =
+document.createElement("div");
+
+box.className =
+"vocal-item";
+
+const title =
+document.createElement("strong");
+
+title.textContent =
+"🎼 Background Music Ready";
+
+const details =
+document.createElement("p");
+
+details.textContent =
+"🎤 Vocal start: " +
+point +
+" seconds";
+
+const audio =
+document.createElement("audio");
+
+audio.controls = true;
+
+const url =
+URL.createObjectURL(blob);
+
+audio.src = url;
+
+const count =
+document.createElement("p");
+
+count.style.marginTop =
+"10px";
+
+count.style.fontWeight =
+"bold";
+
+count.textContent =
+"1 → 2 → 3 → 4 → 🎤 VOCAL START";
+
+box.appendChild(title);
+
+box.appendChild(details);
+
+box.appendChild(count);
+
+box.appendChild(audio);
+
+preparedArea.appendChild(box);
+
+}
+
+
+/* =====================================================
+   SAVE BACKGROUND
+===================================================== */
+
+saveBtn.addEventListener(
+"click",
+async function(){
+
+if(!preparedAudio){
+
+message.textContent =
+"⚠️ Prepare the background music first.";
+
+return;
+
+}
 
 saveBtn.disabled = true;
 
 saveBtn.textContent =
 "⏳ Saving...";
 
-
 try{
 
 await openDatabase();
 
+const originalName =
+selectedFile ?
+selectedFile.name :
+"background";
 
-const vocal = {
+const cleanName =
+originalName
+.replace(/\.[^/.]+$/,"");
+
+const savedName =
+cleanName +
+" - Background Music";
+
+const record = {
 
 id:
-Date.now().toString() + "_" + Math.random().toString(36).substring(2),
+Date.now().toString() +
+"_" +
+Math.random()
+.toString(36)
+.substring(2),
 
 name:
-selectedFile.name,
+savedName,
 
 type:
-selectedFile.type || "audio/mpeg",
+preparedAudio.type ||
+"audio/mpeg",
 
 size:
-selectedFile.size,
+preparedAudio.size,
 
 date:
 new Date().toLocaleString(),
 
+vocalStart:
+parseFloat(startTime.value),
+
+countIn:
+"1 → 2 → 3 → 4",
+
 data:
-selectedFile
+preparedAudio
 
 };
 
-
-await saveVocalToDB(vocal);
-
+await saveBackgroundToDB(record);
 
 message.textContent =
-"✅ Vocal saved successfully!";
-
+"✅ Background music saved successfully!";
 
 selectedFile = null;
+
+preparedAudio = null;
 
 audioFile.value = "";
 
@@ -506,6 +939,12 @@ fileInfo.textContent =
 saveBtn.style.display =
 "none";
 
+preparedArea.innerHTML =
+`
+<div class="empty">
+Background music saved.
+</div>
+`;
 
 await displayVocals();
 
@@ -518,28 +957,29 @@ console.error(
 error
 );
 
-
 message.textContent =
-"❌ Could not save the vocal. Please check browser storage permission.";
+"❌ Could not save background music.";
 
 }
-
 
 saveBtn.disabled = false;
 
 saveBtn.textContent =
-"💾 Save Vocal";
+"💾 Save Background";
 
 });
 
 
 /* =====================================================
-   SAVE TO INDEXEDDB
+   SAVE DATABASE
 ===================================================== */
 
-function saveVocalToDB(vocal){
+function saveBackgroundToDB(
+record
+){
 
-return new Promise(function(resolve,reject){
+return new Promise(
+function(resolve,reject){
 
 const transaction =
 db.transaction(
@@ -548,12 +988,12 @@ db.transaction(
 );
 
 const store =
-transaction.objectStore(STORE_NAME);
-
+transaction.objectStore(
+STORE_NAME
+);
 
 const request =
-store.put(vocal);
-
+store.put(record);
 
 request.onsuccess =
 function(){
@@ -561,7 +1001,6 @@ function(){
 resolve();
 
 };
-
 
 request.onerror =
 function(){
@@ -576,12 +1015,13 @@ reject(request.error);
 
 
 /* =====================================================
-   GET ALL VOCALS
+   GET RECORDS
 ===================================================== */
 
-function getVocals(){
+function getBackgroundMusic(){
 
-return new Promise(function(resolve,reject){
+return new Promise(
+function(resolve,reject){
 
 if(!db){
 
@@ -591,7 +1031,6 @@ return;
 
 }
 
-
 const transaction =
 db.transaction(
 [STORE_NAME],
@@ -599,12 +1038,12 @@ db.transaction(
 );
 
 const store =
-transaction.objectStore(STORE_NAME);
-
+transaction.objectStore(
+STORE_NAME
+);
 
 const request =
 store.getAll();
-
 
 request.onsuccess =
 function(){
@@ -615,7 +1054,6 @@ request.result || []
 
 };
 
-
 request.onerror =
 function(){
 
@@ -629,7 +1067,7 @@ reject(request.error);
 
 
 /* =====================================================
-   DISPLAY VOCALS
+   DISPLAY
 ===================================================== */
 
 async function displayVocals(){
@@ -639,15 +1077,14 @@ try{
 await openDatabase();
 
 const vocals =
-await getVocals();
-
+await getBackgroundMusic();
 
 if(vocals.length === 0){
 
 vocalList.innerHTML =
 `
 <div class="empty">
-No vocals saved yet.
+No background music saved yet.
 </div>
 `;
 
@@ -655,18 +1092,20 @@ return;
 
 }
 
-
 vocalList.innerHTML = "";
 
+vocals.sort(
+function(a,b){
 
-vocals.sort(function(a,b){
-
-return b.id.localeCompare(a.id);
+return b.id.localeCompare(
+a.id
+);
 
 });
 
 
-vocals.forEach(function(vocal){
+vocals.forEach(
+function(vocal){
 
 const item =
 document.createElement("div");
@@ -692,35 +1131,39 @@ vocal.date +
 formatFileSize(vocal.size);
 
 
+const start =
+document.createElement("p");
+
+start.textContent =
+"🎤 Vocal start: " +
+(
+vocal.vocalStart || 0
+) +
+" seconds";
+
+
+const count =
+document.createElement("p");
+
+count.style.fontWeight =
+"bold";
+
+count.textContent =
+"1 → 2 → 3 → 4 → 🎤 VOCAL START";
+
+
 const player =
 document.createElement("audio");
 
 player.controls = true;
 
-
-/*
-   Create temporary URL from the
-   stored Blob/File.
-*/
-
 const audioURL =
-URL.createObjectURL(vocal.data);
+URL.createObjectURL(
+vocal.data
+);
 
 player.src =
 audioURL;
-
-
-player.addEventListener(
-"ended",
-function(){
-
-URL.revokeObjectURL(audioURL);
-
-},
-{
-once:true
-}
-);
 
 
 const actions =
@@ -737,13 +1180,14 @@ download.className =
 "download-btn";
 
 download.textContent =
-"⬇️ Download Vocal";
+"⬇️ Download Background";
 
 download.href =
 audioURL;
 
 download.download =
-vocal.name;
+vocal.name +
+".mp3";
 
 
 const deleteButton =
@@ -765,23 +1209,27 @@ function(){
 
 deleteVocal(vocal.id);
 
-}
-);
+});
 
 
 actions.appendChild(download);
 
-actions.appendChild(deleteButton);
+actions.appendChild(
+deleteButton
+);
 
 
 item.appendChild(title);
 
 item.appendChild(details);
 
+item.appendChild(start);
+
+item.appendChild(count);
+
 item.appendChild(player);
 
 item.appendChild(actions);
-
 
 vocalList.appendChild(item);
 
@@ -799,7 +1247,7 @@ error
 vocalList.innerHTML =
 `
 <div class="empty">
-⚠️ Could not load saved vocals.
+⚠️ Could not load saved background music.
 </div>
 `;
 
@@ -809,26 +1257,25 @@ vocalList.innerHTML =
 
 
 /* =====================================================
-   DELETE VOCAL
+   DELETE
 ===================================================== */
 
 async function deleteVocal(id){
 
 if(!confirm(
-"Are you sure you want to delete this vocal?"
+"Delete this background music?"
 )){
 
 return;
 
 }
 
-
 try{
 
 await openDatabase();
 
-
-await new Promise(function(resolve,reject){
+await new Promise(
+function(resolve,reject){
 
 const transaction =
 db.transaction(
@@ -837,12 +1284,12 @@ db.transaction(
 );
 
 const store =
-transaction.objectStore(STORE_NAME);
-
+transaction.objectStore(
+STORE_NAME
+);
 
 const request =
 store.delete(id);
-
 
 request.onsuccess =
 function(){
@@ -850,7 +1297,6 @@ function(){
 resolve();
 
 };
-
 
 request.onerror =
 function(){
@@ -861,10 +1307,8 @@ reject(request.error);
 
 });
 
-
 message.textContent =
-"🗑️ Vocal deleted successfully.";
-
+"🗑️ Background music deleted.";
 
 await displayVocals();
 
@@ -873,12 +1317,11 @@ await displayVocals();
 catch(error){
 
 console.error(
-"Delete error:",
 error
 );
 
 message.textContent =
-"❌ Could not delete the vocal.";
+"❌ Could not delete background music.";
 
 }
 
@@ -897,7 +1340,6 @@ return "0 Bytes";
 
 }
 
-
 const units = [
 "Bytes",
 "KB",
@@ -905,19 +1347,20 @@ const units = [
 "GB"
 ];
 
-
 const index =
 Math.floor(
 Math.log(bytes) /
 Math.log(1024)
 );
 
-
 return (
 parseFloat(
 (
 bytes /
-Math.pow(1024,index)
+Math.pow(
+1024,
+index
+)
 ).toFixed(2)
 ) +
 " " +
