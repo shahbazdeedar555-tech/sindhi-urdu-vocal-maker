@@ -8,7 +8,6 @@
 <title>Sindhi Urdu Vocal Repository</title>
 
 <style>
-
 *{
 box-sizing:border-box;
 margin:0;
@@ -61,39 +60,28 @@ margin-bottom:12px;
 
 .upload-box{
 border:2px dashed #888;
-padding:25px 18px;
+padding:25px 15px;
 text-align:center;
 border-radius:12px;
 margin-top:15px;
 background:#fafafa;
 }
 
-/* REAL MOBILE UPLOAD BUTTON */
-
-.file-label{
-display:inline-block;
-background:#0757a8;
-color:white;
-padding:14px 22px;
-border-radius:9px;
+.file-input{
+display:block;
+width:100%;
+padding:12px;
+margin-top:18px;
 font-size:16px;
-font-weight:bold;
-cursor:pointer;
-margin-top:10px;
-}
-
-.file-label:hover{
-opacity:.85;
-}
-
-#audioFile{
-display:none;
+background:white;
+border:1px solid #ccc;
+border-radius:8px;
 }
 
 #fileInfo{
 margin-top:18px;
-font-size:15px;
 word-break:break-word;
+font-size:15px;
 }
 
 .buttons{
@@ -105,7 +93,7 @@ margin-top:20px;
 button,
 .download-btn{
 border:none;
-padding:12px 18px;
+padding:13px 18px;
 border-radius:8px;
 cursor:pointer;
 font-size:15px;
@@ -116,7 +104,6 @@ display:inline-block;
 
 button:disabled{
 opacity:.6;
-cursor:not-allowed;
 }
 
 #saveBtn{
@@ -199,10 +186,6 @@ font-size:22px;
 padding:18px;
 }
 
-.file-label{
-width:100%;
-}
-
 button,
 .download-btn{
 width:100%;
@@ -210,10 +193,8 @@ text-align:center;
 }
 
 }
-
 </style>
 </head>
-
 
 <body>
 
@@ -221,9 +202,7 @@ text-align:center;
 
 <h1>🎵 Sindhi Urdu Vocal Repository</h1>
 
-<p>
-Store and manage Sindhi & Urdu vocal recordings
-</p>
+<p>Store and manage Sindhi & Urdu vocal recordings</p>
 
 <div class="sindhi">
 سنڌي ۽ اردو آواز جو ذخيرو
@@ -234,52 +213,34 @@ Store and manage Sindhi & Urdu vocal recordings
 
 <main class="container">
 
-
-<!-- UPLOAD VOCAL -->
-
 <section class="card">
 
 <h2>🎙️ Upload Vocal</h2>
 
-<p>
-Select your vocal audio file.
-</p>
-
+<p>Select your vocal audio file.</p>
 
 <div class="upload-box">
 
-
-<!-- MOBILE UPLOAD BUTTON -->
-
-<label
-for="audioFile"
-class="file-label">
-
-📁 Choose Vocal File
-
-</label>
-
+<!-- NATIVE ANDROID FILE PICKER -->
 
 <input
+class="file-input"
 type="file"
 id="audioFile"
-accept="audio/*"
+accept=".mp3,.wav,.m4a,.ogg,.aac,.flac,audio/*"
 >
-
 
 <div id="fileInfo">
 No file selected
 </div>
 
-
 <div class="buttons">
 
-<button id="saveBtn">
+<button id="saveBtn" type="button">
 💾 Save Vocal
 </button>
 
 </div>
-
 
 <div id="message"></div>
 
@@ -288,15 +249,9 @@ No file selected
 </section>
 
 
-
-<!-- SAVED VOCALS -->
-
 <section class="card">
 
-<h2>
-📚 Saved Vocals
-</h2>
-
+<h2>📚 Saved Vocals</h2>
 
 <div id="vocalList">
 
@@ -306,43 +261,29 @@ No vocals saved yet.
 
 </div>
 
-
 <div class="storage-info">
 
 💾 <strong>Local Repository:</strong>
-
-Your saved vocals are stored in this browser
-on this device.
+Saved recordings remain in this browser on this device.
 
 </div>
 
 </section>
 
 
-
-<!-- ABOUT -->
-
 <section class="card">
 
-<h2>
-🎼 About This Repository
-</h2>
-
+<h2>🎼 About This Repository</h2>
 
 <p>
-
 This project is designed to collect and organize
 Sindhi and Urdu vocal recordings for singers,
 poets, musicians and creators.
-
 </p>
 
-
 <div class="sindhi">
-
 سنڌي ۽ اردو گيتن ۽ آوازن کي محفوظ ۽ منظم ڪرڻ لاءِ
 هي repository تيار ڪئي پئي وڃي.
-
 </div>
 
 </section>
@@ -350,23 +291,16 @@ poets, musicians and creators.
 </main>
 
 
-
 <footer>
 
-<p>
-© 2026 Sindhi Urdu Vocal Repository
-</p>
+<p>© 2026 Sindhi Urdu Vocal Repository</p>
 
-<p>
-Created by Deedar Shahbaz
-</p>
+<p>Created by Deedar Shahbaz</p>
 
 </footer>
 
 
-
 <script>
-
 
 const audioFile =
 document.getElementById("audioFile");
@@ -384,159 +318,125 @@ const vocalList =
 document.getElementById("vocalList");
 
 
-let selectedFile = null;
-
-
 const STORAGE_KEY =
 "sindhiUrduVocalRepository";
 
 
-
-/* =====================================
-   CHOOSE FILE
-===================================== */
-
-audioFile.addEventListener(
-"change",
-function(){
-
-message.textContent="";
+let selectedFile = null;
 
 
-if(!this.files || this.files.length===0){
+/* =========================
+   SELECT FILE
+========================= */
 
-selectedFile=null;
+audioFile.addEventListener("change", function(){
 
-fileInfo.textContent=
+message.textContent = "";
+
+if(!this.files || this.files.length === 0){
+
+selectedFile = null;
+
+fileInfo.textContent =
 "No file selected";
 
-saveBtn.style.display="none";
+saveBtn.style.display =
+"none";
 
 return;
 
 }
 
 
-selectedFile=this.files[0];
+selectedFile =
+this.files[0];
 
 
-if(!selectedFile.type.startsWith("audio/")){
-
-message.textContent=
-"⚠️ Please select an audio file.";
-
-selectedFile=null;
-
-this.value="";
-
-fileInfo.textContent=
-"No file selected";
-
-saveBtn.style.display="none";
-
-return;
-
-}
+console.log(
+"Selected file:",
+selectedFile.name
+);
 
 
-fileInfo.innerHTML=
-"🎵 <strong>Selected:</strong> "+
-escapeHTML(selectedFile.name)+
-"<br>"+
-"📦 Size: "+
-formatFileSize(selectedFile.size);
+fileInfo.innerHTML =
+"🎵 <strong>Selected:</strong> " +
+escapeHTML(selectedFile.name) +
+"<br><br>" +
+"📦 Size: " +
+formatFileSize(selectedFile.size) +
+"<br>" +
+"🎧 Type: " +
+(selectedFile.type || "Audio");
 
 
-saveBtn.style.display=
+saveBtn.style.display =
 "inline-block";
+
+
+message.textContent =
+"✅ File ready to save.";
 
 });
 
 
+/* =========================
+   SAVE
+========================= */
 
-/* =====================================
-   SAVE VOCAL
-===================================== */
-
-saveBtn.addEventListener(
-"click",
-async function(){
+saveBtn.addEventListener("click", function(){
 
 if(!selectedFile){
 
-message.textContent=
-"⚠️ Please select an audio file.";
+message.textContent =
+"⚠️ Please select an audio file first.";
 
 return;
 
 }
 
 
-saveBtn.disabled=true;
+saveBtn.disabled = true;
 
-saveBtn.textContent=
+saveBtn.textContent =
 "⏳ Saving...";
 
 
+const reader =
+new FileReader();
+
+
+reader.onload = function(event){
+
 try{
 
-const vocals=
-getSavedVocals();
+const vocals =
+getVocals();
 
 
-const duplicate=
-vocals.some(function(vocal){
-
-return(
-vocal.name===
-selectedFile.name &&
-vocal.size===
-selectedFile.size
-);
-
-});
-
-
-if(duplicate){
-
-message.textContent=
-"⚠️ This vocal is already saved.";
-
-saveBtn.disabled=false;
-
-saveBtn.textContent=
-"💾 Save Vocal";
-
-return;
-
-}
-
-
-const data=
-await fileToDataURL(selectedFile);
-
-
-const vocal={
+const newVocal = {
 
 id:
-Date.now()+"-"+Math.random()
-.toString(36)
-.substring(2,9),
+Date.now().toString(),
 
-name:selectedFile.name,
+name:
+selectedFile.name,
 
-type:selectedFile.type,
+type:
+selectedFile.type || "audio/mpeg",
 
-size:selectedFile.size,
+size:
+selectedFile.size,
 
-data:data,
+date:
+new Date().toLocaleString(),
 
-date:new Date().toLocaleString()
+data:
+event.target.result
 
 };
 
 
-vocals.push(vocal);
+vocals.push(newVocal);
 
 
 localStorage.setItem(
@@ -545,18 +445,18 @@ JSON.stringify(vocals)
 );
 
 
-message.textContent=
+message.textContent =
 "✅ Vocal saved successfully!";
 
 
-selectedFile=null;
+selectedFile = null;
 
-audioFile.value="";
+audioFile.value = "";
 
-fileInfo.textContent=
+fileInfo.textContent =
 "No file selected";
 
-saveBtn.style.display=
+saveBtn.style.display =
 "none";
 
 
@@ -568,80 +468,57 @@ catch(error){
 
 console.error(error);
 
-message.textContent=
-"❌ Could not save this file. "+
-"The browser storage limit may have been reached.";
+message.textContent =
+"❌ Storage is full. Try a smaller audio file.";
 
 }
 
 
-saveBtn.disabled=false;
+saveBtn.disabled = false;
 
-saveBtn.textContent=
+saveBtn.textContent =
 "💾 Save Vocal";
 
-});
+};
 
 
+reader.onerror = function(){
 
-/* =====================================
-   FILE READER
-===================================== */
+message.textContent =
+"❌ Could not read this audio file.";
 
-function fileToDataURL(file){
+saveBtn.disabled = false;
 
-return new Promise(
-function(resolve,reject){
-
-const reader=
-new FileReader();
-
-
-reader.onload=
-function(){
-
-resolve(reader.result);
+saveBtn.textContent =
+"💾 Save Vocal";
 
 };
 
 
-reader.onerror=
-function(){
-
-reject(reader.error);
-
-};
-
-
-reader.readAsDataURL(file);
+reader.readAsDataURL(selectedFile);
 
 });
 
-}
 
-
-
-/* =====================================
+/* =========================
    GET VOCALS
-===================================== */
+========================= */
 
-function getSavedVocals(){
+function getVocals(){
 
 try{
 
-const saved=
+const data =
 localStorage.getItem(STORAGE_KEY);
 
-if(!saved){
+if(!data){
 
 return [];
 
 }
 
-
-const vocals=
-JSON.parse(saved);
-
+const vocals =
+JSON.parse(data);
 
 return Array.isArray(vocals)
 ? vocals
@@ -660,20 +537,19 @@ return [];
 }
 
 
-
-/* =====================================
-   DISPLAY VOCALS
-===================================== */
+/* =========================
+   DISPLAY
+========================= */
 
 function displayVocals(){
 
-const vocals=
-getSavedVocals();
+const vocals =
+getVocals();
 
 
-if(vocals.length===0){
+if(vocals.length === 0){
 
-vocalList.innerHTML=
+vocalList.innerHTML =
 `
 <div class="empty">
 No vocals saved yet.
@@ -685,80 +561,77 @@ return;
 }
 
 
-vocalList.innerHTML="";
+vocalList.innerHTML = "";
 
 
-vocals.forEach(
-function(vocal){
+vocals.forEach(function(vocal){
 
-const item=
+const item =
 document.createElement("div");
 
-item.className=
+item.className =
 "vocal-item";
 
 
-const title=
+const title =
 document.createElement("strong");
 
-title.textContent=
-"🎵 "+vocal.name;
+title.textContent =
+"🎵 " + vocal.name;
 
 
-const details=
+const details =
 document.createElement("p");
 
-details.textContent=
-"Saved: "+
-vocal.date+
-" • Size: "+
+details.textContent =
+"Saved: " +
+vocal.date +
+" • " +
 formatFileSize(vocal.size);
 
 
-const audio=
+const player =
 document.createElement("audio");
 
-audio.controls=true;
+player.controls = true;
 
-audio.preload="metadata";
+player.src =
+vocal.data;
 
-audio.src=vocal.data;
 
-
-const actions=
+const actions =
 document.createElement("div");
 
-actions.className=
+actions.className =
 "action-buttons";
 
 
-/* DOWNLOAD */
-
-const download=
+const download =
 document.createElement("a");
 
-download.className=
+download.className =
 "download-btn";
 
-download.textContent=
+download.textContent =
 "⬇️ Download Vocal";
 
-download.href=
+download.href =
 vocal.data;
 
-download.download=
+download.download =
 vocal.name;
 
 
-/* DELETE */
-
-const deleteButton=
+const deleteButton =
 document.createElement("button");
 
-deleteButton.className=
+deleteButton.className =
 "delete-btn";
 
-deleteButton.textContent=
+deleteButton.type =
+"button";
+
+deleteButton.textContent =
 "🗑️ Delete";
 
 
@@ -768,7 +641,8 @@ function(){
 
 deleteVocal(vocal.id);
 
-});
+}
+);
 
 
 actions.appendChild(download);
@@ -780,7 +654,7 @@ item.appendChild(title);
 
 item.appendChild(details);
 
-item.appendChild(audio);
+item.appendChild(player);
 
 item.appendChild(actions);
 
@@ -792,48 +666,20 @@ vocalList.appendChild(item);
 }
 
 
-
-/* =====================================
+/* =========================
    DELETE
-===================================== */
+========================= */
 
 function deleteVocal(id){
 
-const vocals=
-getSavedVocals();
+const vocals =
+getVocals();
 
 
-const vocal=
-vocals.find(
-function(item){
+const updated =
+vocals.filter(function(vocal){
 
-return item.id===id;
-
-});
-
-
-if(!vocal){
-
-return;
-
-}
-
-
-if(!confirm(
-"Delete this vocal?\n\n"+
-vocal.name
-)){
-
-return;
-
-}
-
-
-const updated=
-vocals.filter(
-function(item){
-
-return item.id!==id;
+return vocal.id !== id;
 
 });
 
@@ -844,30 +690,28 @@ JSON.stringify(updated)
 );
 
 
-message.textContent=
+message.textContent =
 "🗑️ Vocal deleted.";
-
 
 displayVocals();
 
 }
 
 
-
-/* =====================================
+/* =========================
    FILE SIZE
-===================================== */
+========================= */
 
 function formatFileSize(bytes){
 
-if(!bytes){
+if(bytes === 0){
 
 return "0 Bytes";
 
 }
 
 
-const units=[
+const units = [
 "Bytes",
 "KB",
 "MB",
@@ -875,31 +719,30 @@ const units=[
 ];
 
 
-const index=
+const index =
 Math.floor(
-Math.log(bytes)/
+Math.log(bytes) /
 Math.log(1024)
 );
 
 
-return(
+return (
 parseFloat(
 (
-bytes/
+bytes /
 Math.pow(1024,index)
 ).toFixed(2)
-)+
-" "+
+) +
+" " +
 units[index]
 );
 
 }
 
 
-
-/* =====================================
+/* =========================
    SECURITY
-===================================== */
+========================= */
 
 function escapeHTML(text){
 
@@ -918,13 +761,11 @@ return String(text)
 }
 
 
-
-/* =====================================
-   LOAD SAVED VOCALS
-===================================== */
+/* =========================
+   START
+========================= */
 
 displayVocals();
-
 
 </script>
 
