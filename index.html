@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sindhi Urdu Vocal Repository</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #222;
+      color: white;
+      padding: 25px 15px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-bottom: 12px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button,
+    .btn {
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 15px;
+      background: #222;
+      color: white;
+      display: inline-block;
+    }
+
+    button:hover,
+    .btn:hover {
+      opacity: 0.85;
+    }
+
+    .upload-box {
+      border: 2px dashed #aaa;
+      padding: 25px;
+      text-align: center;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    input[type="file"] {
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    #fileInfo {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      margin-top: 40px;
+      background: #222;
+      color: white;
+    }
+
+    .sindhi {
+      direction: rtl;
+      text-align: right;
+      font-size: 20px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🎵 Sindhi Urdu Vocal Repository</h1>
+    <p>Store, manage and share Sindhi & Urdu vocal recordings</p>
+
+    <div class="sindhi">
+      سنڌي ۽ اردو آواز جو ذخيرو
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="card">
+      <h2>🎤 Vocal Repository</h2>
+
+      <p>
+        Welcome to the Sindhi Urdu Vocal Repository.
+        This project is designed to collect and organize
+        Sindhi and Urdu vocal recordings.
+      </p>
+
+      <div class="buttons">
+        <a class="btn" href="#upload">Upload Vocal</a>
+        <a class="btn" href="#repository">View Repository</a>
+      </div>
+    </section>
+
+
+    <section class="card" id="upload">
+      <h2>🎙️ Upload Vocal</h2>
+
+      <p>
+        Select an audio file from your device.
+      </p>
+
+      <div class="upload-box">
+
+        <label for="audioFile">
+          Choose Vocal Audio File
+        </label>
+
+        <input
+          type="file"
+          id="audioFile"
+          accept="audio/*"
+        >
+
+        <div id="fileInfo">
+          No file selected
+        </div>
+
+      </div>
+    </section>
+
+
+    <section class="card" id="repository">
+      <h2>📚 Repository</h2>
+
+      <p>
+        Your saved vocal recordings will appear here.
+      </p>
+
+      <div id="vocalList">
+        <p>No vocals saved yet.</p>
+      </div>
+    </section>
+
+
+    <section class="card">
+      <h2>🎼 Project Information</h2>
+
+      <p>
+        This repository is being developed for
+        Sindhi and Urdu singers, poets, musicians and
+        creators.
+      </p>
+
+      <div class="sindhi">
+        هي پليٽ فارم سنڌي ۽ اردو گلوڪارن، شاعرن،
+        موسيقارن ۽ تخليقڪارن لاءِ تيار ڪيو پيو وڃي.
+      </div>
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>© 2026 Sindhi Urdu Vocal Repository</p>
+    <p>Created by Deedar Shahbaz</p>
+  </footer>
+
+
+  <script>
+    const audioFile = document.getElementById("audioFile");
+    const fileInfo = document.getElementById("fileInfo");
+
+    audioFile.addEventListener("change", function () {
+
+      if (this.files.length > 0) {
+        const file = this.files[0];
+
+        fileInfo.textContent =
+          "Selected: " + file.name;
+      } else {
+        fileInfo.textContent =
+          "No file selected";
+      }
+
+    });
+  </script>
+
+</body>
+</html>
